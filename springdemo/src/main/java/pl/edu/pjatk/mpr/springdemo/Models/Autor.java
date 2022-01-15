@@ -1,25 +1,29 @@
 package pl.edu.pjatk.mpr.springdemo.Models;
 
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
 public class Autor {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // Do tego potrzebny jest bezargumentowy konstruktor
     private Integer id;
     private String imie;
     private String nazwisko;
     private Integer dataur;
     private Integer datasm;
+    @ManyToMany(mappedBy = "autor")
+    private List<Ksiazka> ksiazka;
 
-    public Autor(Integer id, String imie, String nazwisko, Integer dataur, Integer datasm) {
+    public Autor(Integer id, String imie, String nazwisko, Integer dataur, Integer datasm, List<Ksiazka> ksiazka) {
         this.id = id;
         this.imie = imie;
         this.nazwisko = nazwisko;
         this.dataur = dataur;
         this.datasm = datasm;
-    }
-
-    public Autor(Integer id, String imie, String nazwisko, Integer dataur) {
-        this.id = id;
-        this.imie = imie;
-        this.nazwisko = nazwisko;
-        this.dataur = dataur;
+        this.ksiazka = ksiazka;
     }
 
     public Autor() {
@@ -65,6 +69,14 @@ public class Autor {
         this.datasm = datasm;
     }
 
+    public List<Ksiazka> getKsiazka() {
+        return ksiazka;
+    }
+
+    public void setKsiazka(List<Ksiazka> ksiazka) {
+        this.ksiazka = ksiazka;
+    }
+
     @Override
     public String toString() {
         return "Autor{" +
@@ -73,6 +85,7 @@ public class Autor {
                 ", nazwisko='" + nazwisko + '\'' +
                 ", dataur=" + dataur +
                 ", datasm=" + datasm +
+                ", ksiazka=" + ksiazka +
                 '}';
     }
 }

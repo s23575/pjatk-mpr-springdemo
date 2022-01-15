@@ -15,11 +15,13 @@ public class KsiegService {
         Wydanie wyd1 = new Wydanie(1,2015,1,"978-83-777-9221-6", Oprawa.TWARDA,49.9,"Znak",true);
         Wydanie wyd2 = new Wydanie(2,2019,"978-83-280-6779-0",Oprawa.MIEKKA,24.99,"Wilga",true);
         List<Wydanie> wydania = List.of(wyd1, wyd2);
-        return new Ksiazka(1, "Zbrodnia i kara","Priestuplenije i nakazanije",wydania);
+        Autor aut1 = new Autor(1,"Fiodor","Dostojewski",1821,1881,null);
+        List<Autor> autorzy = List.of(aut1);
+        return new Ksiazka(1, "Zbrodnia i kara","Priestuplenije i nakazanije",wydania,autorzy);
     }
 
     public Autor getPrzykAutor() {
-        return new Autor(1,"Fiodor","Dostojewski",1821,1881);
+        return new Autor(1,"Fiodor","Dostojewski",1821,1881,null);
     }
 
     public Wydanie getPrzykWyd() {
@@ -27,6 +29,6 @@ public class KsiegService {
     }
 
     public Autor getPrzykAutorArugm(String imie, String nazwisko, Integer dataur) {
-        return new Autor(1, imie, nazwisko, dataur, null);
+        return new Autor(1, imie, nazwisko, dataur, null,null);
     }
 }

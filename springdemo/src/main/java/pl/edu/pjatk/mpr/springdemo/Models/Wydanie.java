@@ -1,6 +1,16 @@
 package pl.edu.pjatk.mpr.springdemo.Models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Wydanie {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // Do tego potrzebny jest bezargumentowy konstruktor
     private Integer id;
     private Integer rok;
     private Integer numer;
