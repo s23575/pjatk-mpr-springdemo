@@ -1,9 +1,7 @@
 package pl.edu.pjatk.mpr.springdemo.Models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Wydanie {
@@ -19,9 +17,15 @@ public class Wydanie {
     private Double cena;
     private String wydawnictwo;
     private Boolean czydostepne;
+    @ManyToMany
+    @JoinTable(
+            name = "w_t",
+            joinColumns = @JoinColumn(name = "wydanie_id"),
+            inverseJoinColumns = @JoinColumn(name = "tlumacz_id"))
+    private List<Tlumacz> tlumacz;
 
     public Wydanie(Integer id, Integer rok, Integer numer, String isbn, Oprawa oprawa, Double cena, String wydawnictwo,
-                   Boolean czydostepne) {
+                   Boolean czydostepne, List<Tlumacz> tlumacz) {
         this.id = id;
         this.rok = rok;
         this.numer = numer;
@@ -30,16 +34,7 @@ public class Wydanie {
         this.cena = cena;
         this.wydawnictwo = wydawnictwo;
         this.czydostepne = czydostepne;
-    }
-
-    public Wydanie(Integer id, Integer rok, String isbn, Oprawa oprawa, Double cena, String wydawnictwo, Boolean czydostepne) {
-        this.id = id;
-        this.rok = rok;
-        this.isbn = isbn;
-        this.oprawa = oprawa;
-        this.cena = cena;
-        this.wydawnictwo = wydawnictwo;
-        this.czydostepne = czydostepne;
+        this.tlumacz = tlumacz;
     }
 
     public Wydanie() {
@@ -109,6 +104,14 @@ public class Wydanie {
         this.czydostepne = czydostepne;
     }
 
+    public List<Tlumacz> getTlumacz() {
+        return tlumacz;
+    }
+
+    public void setTlumacz(List<Tlumacz> tlumacz) {
+        this.tlumacz = tlumacz;
+    }
+
     @Override
     public String toString() {
         return "Wydanie{" +
@@ -120,6 +123,7 @@ public class Wydanie {
                 ", cena=" + cena +
                 ", wydawnictwo='" + wydawnictwo + '\'' +
                 ", czydostepne=" + czydostepne +
+                ", tlumacz=" + tlumacz +
                 '}';
     }
 }

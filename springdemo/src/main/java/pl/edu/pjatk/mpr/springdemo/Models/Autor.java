@@ -1,5 +1,7 @@
 package pl.edu.pjatk.mpr.springdemo.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -14,7 +16,9 @@ public class Autor {
     private String nazwisko;
     private Integer dataur;
     private Integer datasm;
-    @ManyToMany(mappedBy = "autor")
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "autorzy")
+    @JsonBackReference
+    // Ta adnotacja jest potrzebna, żeby w JSONie książka nie rozwijała się bez końca (zapętlenie)
     private List<Ksiazka> ksiazka;
 
     public Autor(Integer id, String imie, String nazwisko, Integer dataur, Integer datasm, List<Ksiazka> ksiazka) {

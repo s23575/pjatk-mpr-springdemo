@@ -1,5 +1,7 @@
 package pl.edu.pjatk.mpr.springdemo.Models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -9,28 +11,34 @@ public class Ksiazka {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     // Do tego potrzebny jest bezargumentowy konstruktor
+    // Identity sprawia, że dane pole ma swoją własną strategię (nie ma wspólnej numeracji dla np. książek i wydań)
     private Integer id;
     private String tytul;
     private String tytuloryg;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
+    // To służy "powiedzeniu", jakie operacje są dozwolone na liście, przez to nie wyskakuje błąd
+    // "object references an unsaved transient instance - save the transient instance before flushing"
+    // Dzięki temu przez stworzenie (dodanie do bazy) przykładowej książki można od razu dodać listę wydań
     @JoinTable(
             name = "k_w",
             joinColumns = @JoinColumn(name = "ksiazka_id"),
             inverseJoinColumns = @JoinColumn(name = "wydanie_id"))
     private List<Wydanie> wydanie;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "k_a",
             joinColumns = @JoinColumn(name = "ksiazka_id"),
             inverseJoinColumns = @JoinColumn(name = "autor_id"))
-    private List<Autor> autor;
+    @JsonManagedReference
+    // Ta adnotacja jest potrzebna, żeby w JSONie książka nie rozwijała się bez końca (zapętlenie)
+    private List<Autor> autorzy;
 
-    public Ksiazka(Integer id, String tytul, String tytuloryg, List<Wydanie> wydanie, List<Autor> autor) {
+    public Ksiazka(Integer id, String tytul, String tytuloryg, List<Wydanie> wydanie, List<Autor> autorzy) {
         this.id = id;
         this.tytul = tytul;
         this.tytuloryg = tytuloryg;
         this.wydanie = wydanie;
-        this.autor = autor;
+        this.autorzy = autorzy;
     }
 
     public Ksiazka() {
@@ -70,12 +78,12 @@ public class Ksiazka {
         this.wydanie = wydanie;
     }
 
-    public List<Autor> getAutor() {
-        return autor;
+    public List<Autor> getAutorzy() {
+        return autorzy;
     }
 
-    public void setAutor(List<Autor> autor) {
-        this.autor = autor;
+    public void setAutorzy(List<Autor> autorzy) {
+        this.autorzy = autorzy;
     }
 
     @Override
@@ -85,7 +93,7 @@ public class Ksiazka {
                 ", tytul='" + tytul + '\'' +
                 ", tytuloryg='" + tytuloryg + '\'' +
                 ", wydanie=" + wydanie +
-                ", autor=" + autor +
+                ", autorzy=" + autorzy +
                 '}';
     }
 }
