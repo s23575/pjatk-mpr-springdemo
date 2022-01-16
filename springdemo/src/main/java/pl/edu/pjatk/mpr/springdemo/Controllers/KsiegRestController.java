@@ -4,10 +4,7 @@ package pl.edu.pjatk.mpr.springdemo.Controllers;
 
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import pl.edu.pjatk.mpr.springdemo.Models.Autor;
 import pl.edu.pjatk.mpr.springdemo.Models.Ksiazka;
@@ -35,6 +32,8 @@ public class KsiegRestController {
         this.ksiegService = ksiegService;
     }
 
+    //<-- Ksiazka -->
+
     @GetMapping("/przykksiazk")
     public ResponseEntity<Ksiazka> getPrzykKsiazk() {
         return ResponseEntity.ok(ksiegService.getPrzykKsiazk());
@@ -45,20 +44,56 @@ public class KsiegRestController {
         return ResponseEntity.ok(ksiegService.getWszystkKsiazk());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Ksiazka> getKsiazkaById(@PathVariable Integer id) {
-        return ResponseEntity.ok(ksiegService.getKsiazkaById(id));
-    }
-
     @GetMapping("/zmientytul")
     public int updateKsiazka() {
         return ksiegService.updateKsiazka();
     }
 
+    @GetMapping("/greater")
+    public ResponseEntity<List<Ksiazka>> getAllByIdIsGreaterThan() {
+        return ResponseEntity.ok(ksiegService.getAllByIdIsGreaterThan());
+    }
+
+    @GetMapping("/greatername")
+    public ResponseEntity<List<Ksiazka>> getAllByIdIsGreaterThanAndTytulIsContaining() {
+        return ResponseEntity.ok(ksiegService.getAllByIdIsGreaterThanAndTytulIsContaining());
+    }
+
+    @GetMapping("/exists/{id}")
+    public boolean existsKsiazkaById(@PathVariable Integer id) {
+        return ksiegService.existsKsiazkaById(id);
+    }
+
+    @GetMapping("/delete/{id}")
+    public void deleteKsiazkaById(@PathVariable Integer id) {
+        ksiegService.deleteKsiazkaById(id);
+    }
+
+
+    //<-- Autor -->
     @GetMapping("/przykaut")
     public ResponseEntity<Autor> getPrzykAut() {
         return ResponseEntity.ok(ksiegService.getPrzykAutor());
     }
+
+    @GetMapping("/przykautoiminazw")
+    public ResponseEntity<Autor> getPrzykAutoArgum() {
+        return ResponseEntity.ok(ksiegService.getPrzykAutorArugm("Jacek", "Dukaj", 1974));
+    }
+
+    @GetMapping("/przykautoimienazwparam")
+    public ResponseEntity<Autor> getPrzykAutoParam(@RequestParam String imie, String nazwisko, Integer dataur, Integer
+            datasm) {
+        // http://localhost:8080/ksieg/przykautoimienazwparam?imie=jan&nazwisko=kowalski
+        return ResponseEntity.ok(ksiegService.getPrzykAutorParam(imie, nazwisko, dataur, datasm));
+    }
+
+    @GetMapping("/autor/{nazwisko}")
+    public ResponseEntity<Autor> getAutorByNazwisko(@PathVariable String nazwisko) {
+        return ResponseEntity.ok(ksiegService.getAutorByNazwisko(nazwisko));
+    }
+
+    //<-- Wydanie -->
 
     @GetMapping("/przykwyd")
     public ResponseEntity<Wydanie> getPrzykWyd() {
@@ -74,11 +109,6 @@ public class KsiegRestController {
     @GetMapping("/wydania")
     public ResponseEntity<List<Wydanie>> getWszystkWyd() {
         return ResponseEntity.ok(ksiegService.getWszystkWyd());
-    }
-
-    @GetMapping("/przykautoiminazw")
-    public ResponseEntity<Autor> getPrzykAutoArgum() {
-        return ResponseEntity.ok(ksiegService.getPrzykAutorArugm("Jacek", "Dukaj", 1974));
     }
 
 }

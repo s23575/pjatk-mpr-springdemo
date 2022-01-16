@@ -44,6 +44,13 @@
 		<!-- Potwierdzenie, że baza się uruchamia: log: -->
 		<!--		2022-01-16 00:03:59.554  INFO 10260 -&#45;&#45; [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...-->
 		<!--		2022-01-16 00:03:59.813  INFO 10260 -&#45;&#45; [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.-->
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+		</dependency>
+		<!-- Tego nie trzeba nawet dodawać -->
+
 	</dependencies>
 
 	<build>

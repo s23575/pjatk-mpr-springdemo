@@ -18,6 +18,9 @@ public interface KsiazkaRepository extends JpaRepository<Ksiazka, Integer> {
     // Dopisanie własnej metody do aktualizacji danych - bo nie ma takiej "domyślnej"
     // Int na początku dlatego, żeby zwracał liczbę poprawionych wierszy
 
-    List<Ksiazka> findAllByIdIsGreaterThan(Integer id)
+    List<Ksiazka> findAllByIdIsGreaterThan(Integer id);
+
+    // To się raczej wykorzystuje do trzech argumentów, powyżej robi się nieczytelne
+    List<Ksiazka> findAllByIdIsGreaterThanAndTytulIsContaining(Integer id, String tytul);
 
 }
