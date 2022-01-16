@@ -1,14 +1,13 @@
 package pl.edu.pjatk.mpr.springdemo.Services;
 
-// import org.junit.jupiter.api.Assertions;
-
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+// Powyższy pakiet nie jest z pakietu mockito, ale ze springa; stąd nie ma też @ExtendWith(MockitoExtension.class)
+
 import pl.edu.pjatk.mpr.springdemo.Models.*;
 import pl.edu.pjatk.mpr.springdemo.Repositories.AutorRepository;
 import pl.edu.pjatk.mpr.springdemo.Repositories.KsiazkaRepository;
@@ -21,31 +20,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-class KsiegServiceTest {
+@SpringBootTest
+class KsiegServiceTestIT {
 
     // <-- Inicjalizacja testowanego serwisu -->
 
-    @Mock
+    @Autowired
+    private KsiegService ksiegService;
+
+    @MockBean
     private KsiazkaRepository ksiazkaRepository;
-    @Mock
+    @MockBean
     private WydanieRepository wydanieRepository;
-    @Mock
+    @MockBean
     private AutorRepository autorRepository;
 
-    @InjectMocks
-    private KsiegService ksiegService; //= new KsiegService(null, null, null);
-    // Repozytoria to interfejsy - nie mogą być "new", zawsze musi być ich implementacja; nie można ich użyć
-    // Czasami tworzy się "sztuczne" repozytoria, na potrzeby testów; poniżej nie będą wywoływane metody z
-    // repozytoriów, więc tutaj "null" zadziała
+    // <-- Testy integracyjne -->
 
-    // <-- Testy -->
-
-    // <-- Testy jednostkowe -->
-
-    // Metoda wywołuje test - sprawdzającą asercję
     @Test
     void shouldDopiszTytuloryg1() {
         // GIVEN
@@ -189,7 +183,7 @@ class KsiegServiceTest {
         assertThat(wydanie.getCena()).isLessThanOrEqualTo(25);
     }
 
-    //<-- Mockowanie -->
+    //<-- Mockowanie beana -->
 
     @Test
     void shouldgetKsiazkaById() {
@@ -316,4 +310,5 @@ class KsiegServiceTest {
         // musiałoby się wykonywać dwukrotnie;
 
     }
+
 }

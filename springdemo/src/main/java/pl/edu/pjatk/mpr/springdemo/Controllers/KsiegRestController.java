@@ -69,8 +69,8 @@ public class KsiegRestController {
         ksiegService.deleteKsiazkaById(id);
     }
 
-
     //<-- Autor -->
+
     @GetMapping("/przykaut")
     public ResponseEntity<Autor> getPrzykAut() {
         return ResponseEntity.ok(ksiegService.getPrzykAutor());
