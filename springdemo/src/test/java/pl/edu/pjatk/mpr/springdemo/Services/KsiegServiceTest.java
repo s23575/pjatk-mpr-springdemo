@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import pl.edu.pjatk.mpr.springdemo.Models.*;
 import pl.edu.pjatk.mpr.springdemo.Repositories.AutorRepository;
 import pl.edu.pjatk.mpr.springdemo.Repositories.KsiazkaRepository;
+import pl.edu.pjatk.mpr.springdemo.Repositories.TlumaczRepository;
 import pl.edu.pjatk.mpr.springdemo.Repositories.WydanieRepository;
 
 import java.util.List;
@@ -34,6 +35,8 @@ class KsiegServiceTest {
     private WydanieRepository wydanieRepository;
     @Mock
     private AutorRepository autorRepository;
+    @Mock
+    private TlumaczRepository tlumaczRepository;
 
     @InjectMocks
     private KsiegService ksiegService; //= new KsiegService(null, null, null);

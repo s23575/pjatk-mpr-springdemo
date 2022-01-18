@@ -11,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import pl.edu.pjatk.mpr.springdemo.Models.*;
 import pl.edu.pjatk.mpr.springdemo.Repositories.AutorRepository;
 import pl.edu.pjatk.mpr.springdemo.Repositories.KsiazkaRepository;
+import pl.edu.pjatk.mpr.springdemo.Repositories.TlumaczRepository;
 import pl.edu.pjatk.mpr.springdemo.Repositories.WydanieRepository;
 
 import java.util.List;
@@ -37,6 +38,8 @@ class KsiegServiceTestIT {
     private WydanieRepository wydanieRepository;
     @MockBean
     private AutorRepository autorRepository;
+    @MockBean
+    private TlumaczRepository tlumaczRepository;
 
     // <-- Testy integracyjne -->
 

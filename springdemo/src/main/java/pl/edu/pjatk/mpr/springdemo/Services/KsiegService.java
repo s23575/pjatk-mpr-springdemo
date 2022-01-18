@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import pl.edu.pjatk.mpr.springdemo.Models.*;
 import pl.edu.pjatk.mpr.springdemo.Repositories.AutorRepository;
 import pl.edu.pjatk.mpr.springdemo.Repositories.KsiazkaRepository;
+import pl.edu.pjatk.mpr.springdemo.Repositories.TlumaczRepository;
 import pl.edu.pjatk.mpr.springdemo.Repositories.WydanieRepository;
 
 import java.util.List;
@@ -15,13 +16,15 @@ public class KsiegService {
     private final KsiazkaRepository ksiazkaRepository;
     private final WydanieRepository wydanieRepository;
     private final AutorRepository autorRepository;
+    private final TlumaczRepository tlumaczRepository;
     // Wstrzynięcie można zrobić przez "Autowired", analogicznie, jak w przypadku serwisów i kontrolera
 
     public KsiegService(KsiazkaRepository ksiazkaRepository, WydanieRepository wydanieRepository, AutorRepository
-            autorRepository) {
+            autorRepository, TlumaczRepository tlumaczRepository) {
         this.ksiazkaRepository = ksiazkaRepository;
         this.wydanieRepository = wydanieRepository;
         this.autorRepository = autorRepository;
+        this.tlumaczRepository = tlumaczRepository;
     }
     // Wstrzyknięcie w serwisie, żeby to rozgraniczyć - nie w kontrolerze; z tego można teraz korzystać w metodach
 
