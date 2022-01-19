@@ -24,6 +24,7 @@ public class Wydanie {
     private Oprawa oprawa;
     private Double cena;
     private String wydawnictwo;
+    @Column(name="czy_dostepne")
     private Boolean czyDostepne;
     @ManyToMany(cascade = CascadeType.ALL)      // **
     @JoinTable(

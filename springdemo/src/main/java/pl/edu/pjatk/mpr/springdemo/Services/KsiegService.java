@@ -82,7 +82,7 @@ public class KsiegService {
         return ksiazkaRepository.existsById(id);
     }
 
-    public void deleteKsiazkaById(Integer id) {
+    public void ksiazkaDeleteById(Integer id) {
         ksiazkaRepository.deleteById(id);
     }
 

@@ -3,8 +3,7 @@ package pl.edu.pjatk.mpr.springdemo.Services;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-// Powyższy pakiet nie jest z pakietu mockito, ale ze springa; stąd nie ma też @ExtendWith(MockitoExtension.class)
+import org.springframework.boot.test.mock.mockito.MockBean;     // *
 
 import pl.edu.pjatk.mpr.springdemo.Models.*;
 import pl.edu.pjatk.mpr.springdemo.Repositories.AutorRepository;
@@ -22,10 +21,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+// * Wskazany pakiet nie jest z pakietu Mockito, ale ze Springa; stąd też nie ma „@ExtendWith(MockitoExtension.class)”.
+
 @SpringBootTest
 class KsiegServiceTestIT {
 
-    // <-- Inicjalizacja testowanego serwisu -->
+    //      < - - Inicjalizacja testowanego serwisu - - >
 
     @Autowired
     private KsiegService ksiegService;
@@ -39,24 +40,25 @@ class KsiegServiceTestIT {
     @MockBean
     private TlumaczRepository tlumaczRepository;
 
-    // <-- Testy integracyjne -->
+    //      < - - Testy integracyjne - - >
 
-    @Test
-    void shouldDopiszTytuloryg1() {
-        // GIVEN
-        Ksiazka ksiazka = new Ksiazka(null, "Imperium chmur", null, List.of(), List.of());
+    @Test       // Metody wywołujące testy - sprawdzającą asercję
+    void shouldDopiszTytulOryg1() {
+        // GIVEN **
+        Ksiazka ksiazka = new Ksiazka(null, "Czarne Oceany", null, List.of(), List.of());
         // WHEN
         ksiegService.dopiszTytulOryg(ksiazka);
         // THEN
-        // Assertions.assertThat() - ale to stare rozwiązanie, bardziej wskazane jest poniższe:
         assertThat(ksiazka.getTytulOryg()).isEqualTo("Brak / nie dotyczy");
+//      Assertions.assertThat(ksiazka.getTytulOryg()).isEqualTo("Brak / nie dotyczy"); //       Stare rozwiązanie
+
     }
 
     @Test
-    void shouldDopiszTytuloryg2() {
+    void shouldDopiszTytulOryg2() {
         // GIVEN
-        Ksiazka ksiazka = new Ksiazka(null, "Zbrodnia i kara", "Priestuplenije i nakazanije", List.of(),
-                List.of());
+        Ksiazka ksiazka = new Ksiazka(null, "Kompleks Portnoya", "Portnoy's Complaint", null,
+                null);
         // WHEN
         ksiegService.dopiszTytulOryg(ksiazka);
         // THEN
@@ -66,7 +68,7 @@ class KsiegServiceTestIT {
     @Test
     void shouldTytulDuzaLitera() {
         // GIVEN
-        Ksiazka ksiazka = new Ksiazka(null, "katedra", null, List.of(), List.of());
+        Ksiazka ksiazka = new Ksiazka(null, "extensa", null, null, null);
         // WHEN
         ksiegService.tytulDuzaLitera(ksiazka);
         // THEN
@@ -76,7 +78,7 @@ class KsiegServiceTestIT {
     @Test
     void shouldUsmiercAutora1() {
         // GIVEN
-        Autor autor = new Autor(null, "Jacek", "Dukaj", 1974, null, List.of());
+        Autor autor = new Autor(null, "Iraj", "Pezeshkzad", 1928, null, null);
         // WHEN
         ksiegService.usmiercAutora(autor);
         // THEN
@@ -86,7 +88,7 @@ class KsiegServiceTestIT {
     @Test
     void shouldUsmiercAutora2() {
         // GIVEN
-        Autor autor = new Autor(null, "Fiodor", "Dostojewski", 1821, 1881, null);
+        Autor autor = new Autor(null, "Philip", "Roth", 1933, 2018, null);
         // WHEN
         ksiegService.usmiercAutora(autor);
         // THEN
@@ -94,12 +96,11 @@ class KsiegServiceTestIT {
     }
 
     @Test
-    void shouldDodajWydanie1() {
+    void shouldDodajWydanie() {
         // GIVEN
-        Ksiazka ksiazka = new Ksiazka(null, "Zbrodnia i kara", "Priestuplenije i nakazanije", List.of(),
-                List.of());
-        Wydanie wydanie = new Wydanie(null, 2015, 1, "978-83-777-9221-6", Oprawa.TWARDA, 49.9,
-                "Znak", true, null);
+        Ksiazka ksiazka = new Ksiazka(null, "Księgi Jakubowe", null, List.of(), null);
+        Wydanie wydanie = new Wydanie(null, 2021, 2, "978-83-08-07328-5", Oprawa.TWARDA, 74.90,
+                "Wydawnictwo Literackie", true, null);
         // WHEN
         ksiegService.dodajWydanie(ksiazka, wydanie);
         // THEN
@@ -109,8 +110,8 @@ class KsiegServiceTestIT {
     @Test
     void shouldZmienDostepnosc1() {
         // GIVEN
-        Wydanie wydanie = new Wydanie(null, 2015, 1, "978-83-777-9221-6", Oprawa.TWARDA, 49.9,
-                "Znak", true, null);
+        Wydanie wydanie = new Wydanie(null, 2021, 2, "978-83-08-07328-5", Oprawa.TWARDA, 74.90,
+                "Wydawnictwo Literackie", true, null);
         // WHEN
         ksiegService.zmienDostepnosc(wydanie);
         // THEN
@@ -120,8 +121,8 @@ class KsiegServiceTestIT {
     @Test
     void shouldZmienDostepnosc2() {
         // GIVEN
-        Wydanie wydanie = new Wydanie(null, 2015, 1, "978-83-777-9221-6", Oprawa.TWARDA, 49.9,
-                "Znak", false, null);
+        Wydanie wydanie = new Wydanie(null, 2015, 1, "978-83-08-04939-6", Oprawa.TWARDA, 69.9,
+                "Wydawnictwo Literackie", false, null);
         // WHEN
         ksiegService.zmienDostepnosc(wydanie);
         // THEN
@@ -131,8 +132,8 @@ class KsiegServiceTestIT {
     @Test
     void shouldZmienOprawe1() {
         // GIVEN
-        Wydanie wydanie = new Wydanie(null, 2015, 1, "978-83-777-9221-6", Oprawa.TWARDA, 49.9,
-                "Znak", true, null);
+        Wydanie wydanie = new Wydanie(null, 2015, 1, "978-83-08-04939-6", Oprawa.TWARDA, 69.9,
+                "Wydawnictwo Literackie", false, null);
         // WHEN
         ksiegService.zmienOprawe(wydanie);
         // THEN
@@ -142,8 +143,8 @@ class KsiegServiceTestIT {
     @Test
     void shouldZmienOprawe2() {
         // GIVEN
-        Wydanie wydanie = new Wydanie(null, 2019, null, "978-83-280-6779-0", Oprawa.MIEKKA, 24.99,
-                "Wilga", true, null);
+        Wydanie wydanie = new Wydanie(null, 2017, null, "978-83-08-06115-2", Oprawa.MIEKKA, 8.99,
+                "Wydawnictwo Literackie", false, null);
         // WHEN
         ksiegService.zmienOprawe(wydanie);
         // THEN
@@ -153,9 +154,9 @@ class KsiegServiceTestIT {
     @Test
     void shouldUsunTlumaczy() {
         // GIVEN
-        List<Tlumacz> tlumacz = List.of(new Tlumacz(null, "Czesław", "Jastrzębiec-Kozłowski", List.of()));
-        Wydanie wydanie = new Wydanie(null, 2015, 1, "978-83-777-9221-6", Oprawa.TWARDA, 49.9,
-                "Znak", true, tlumacz);
+        List<Tlumacz> tlumacz = List.of(new Tlumacz(null, "Jan Krzysztof", "Kelus", null));
+        Wydanie wydanie = new Wydanie(null, 2014, 4, "978-83-7392-747-6", Oprawa.MIEKKA, 35.0,
+                "Wydawnictwo Literackie", true, tlumacz);
         // WHEN
         ksiegService.usunTlumaczy(wydanie);
         // THEN
@@ -165,8 +166,8 @@ class KsiegServiceTestIT {
     @Test
     void shouldObnizCene1() {
         // GIVEN
-        Wydanie wydanie = new Wydanie(null, 2015, 1, "978-83-777-9221-6", Oprawa.TWARDA, 49.9,
-                "Znak", true, null);
+        Wydanie wydanie = new Wydanie(null, 2014, 4, "978-83-7392-747-6", Oprawa.MIEKKA, 35.0,
+                "Wydawnictwo Literackie", true, null);
         // WHEN
         ksiegService.obnizCene(wydanie);
         // THEN
@@ -176,25 +177,20 @@ class KsiegServiceTestIT {
     @Test
     void shouldObnizCene2() {
         // GIVEN
-        Wydanie wydanie = new Wydanie(null, 2019, null, "978-83-280-6779-0", Oprawa.MIEKKA, 25.0,
-                "Wilga", true, null);
+        Wydanie wydanie = new Wydanie(null, 2017, null, "978-83-08-06115-2", Oprawa.MIEKKA, 8.99,
+                "Wydawnictwo Literackie", false, null);
         // WHEN
         ksiegService.obnizCene(wydanie);
         // THEN
         assertThat(wydanie.getCena()).isLessThanOrEqualTo(25);
     }
 
-    //<-- Mockowanie beana -->
+    //      < - - Testy integracyjne z mockowaniem - - >
 
     @Test
-    void shouldgetKsiazkaById() {
+    void shouldGetKsiazkaById() {
         when(ksiazkaRepository.findById(any()))
                 .thenReturn(Optional.of(new Ksiazka()));
-        // Bez powyższego fragmentu kodu rezultatem testu jest AssertionError; jest on jest spowodowany tym, że nie
-        // ma bazy / nie ma książk od o określonym id; w rezultacie zwracany jest Optional, który jest obsłużony w
-        // ten sposób ("orElse"), że zwraca nulla; to wymaga więc zamockowania obiektu - książki, która powinna
-        // zostać zwrócona
-
 
         Ksiazka byId = ksiegService.getKsiazkaById(1);
 
@@ -212,104 +208,112 @@ class KsiegServiceTestIT {
     }
 
     @Test
-    void shouldGetAutorByNaziwsko() {
+    void shouldGetKsiazki() {
+        List<Ksiazka> ksiazki = List.of(new Ksiazka(), new Ksiazka(), new Ksiazka());
+
+        when(ksiazkaRepository.findAll())
+                .thenReturn(ksiazki);
+
+        List<Ksiazka> wszystkieKsiazki = ksiegService.getKsiazki();
+
+        assertThat(wszystkieKsiazki).hasSize(ksiazki.size());
+//        assertThat(wszystkieKsiazki).isNotEmpty();
+    }
+
+    @Test
+    void shouldNotGetKsiazki() {
+        when(ksiazkaRepository.findAll())
+                .thenReturn(List.of());
+
+        List<Ksiazka> wszystkieKsiazki = ksiegService.getKsiazki();
+
+        assertThat(wszystkieKsiazki).isEmpty();
+    }
+
+    @Test
+    void shouldGetAutorByNazwisko() {
         when(autorRepository.findByNazwisko(any()))
                 .thenReturn(Optional.of(new Autor()));
 
-        Optional<Autor> byNazwisko = autorRepository.findByNazwisko("Dostojewski");
+        Optional<Autor> byNazwisko = autorRepository.findByNazwisko("Stasiuk");
 
         assertThat(byNazwisko).isNotNull();
     }
 
     @Test
-    void shouldNotGetAutorByNaziwsko() {
+    void shouldNotGetAutorByNazwisko() {
         when(autorRepository.findByNazwisko(any()))
                 .thenReturn(Optional.empty());
 
         RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> { ksiegService.getAutorByNazwisko("Dostojewski"); }
+                () -> { ksiegService.getAutorByNazwisko("Pezeshkzad"); }
         );
 
         assertEquals("Obsługiwany błąd", exception.getMessage());
     }
 
     @Test
-    void shouldGetWszystkKsiazk() {
-        List<Ksiazka> ksiazki = List.of(new Ksiazka(), new Ksiazka(), new Ksiazka());
-
-        when(ksiazkaRepository.findAll())
-                .thenReturn(ksiazki);
-
-        List<Ksiazka> wszystkKsiazk = ksiegService.getKsiazki();
-
-        assertThat(wszystkKsiazk).hasSize(ksiazki.size());
-//        assertThat(wszystkKsiazk).isNotEmpty();
-    }
-
-    @Test
-    void shouldGetZadnaKsiazk() {
-        when(ksiazkaRepository.findAll())
-                .thenReturn(List.of());
-
-        List<Ksiazka> wszystkKsiazk = ksiegService.getKsiazki();
-
-        assertThat(wszystkKsiazk).isEmpty();
-    }
-
-    @Test
-    void shouldGetWszystkWyd() {
+    void shouldGetWydania() {
         List<Wydanie> wydania = List.of(new Wydanie(), new Wydanie(), new Wydanie());
 
         when(wydanieRepository.findAll())
                 .thenReturn(wydania);
 
-        List<Wydanie> wszystkWyd = ksiegService.getWydania();
+        List<Wydanie> wszystkieWydania = ksiegService.getWydania();
 
-        assertThat(wszystkWyd).isNotEmpty();
+        assertThat(wszystkieWydania).isNotEmpty();
     }
 
     @Test
-    void shouldGetZadneWyd() {
+    void shouldNotGetWydania() {
         when(wydanieRepository.findAll())
                 .thenReturn(List.of());
 
-        List<Wydanie> wszystkWyd = ksiegService.getWydania();
+        List<Wydanie> wszystkieWydania = ksiegService.getWydania();
 
-        assertThat(wszystkWyd).isEmpty();
+        assertThat(wszystkieWydania).isEmpty();
     }
 
     @Test
-    void shouldExistsKsiazkaById() {
+    void shouldKsiazkaExistsById() {
         when(ksiazkaRepository.existsById(any()))
                 .thenReturn(true);
 
-        boolean existsKsiazkaById = ksiegService.ksiazkaExistsById(1);
+        boolean ksiazkaExistsById = ksiegService.ksiazkaExistsById(1);
 
-        assertThat(existsKsiazkaById).isTrue();
+        assertThat(ksiazkaExistsById).isTrue();
     }
 
     @Test
-    void shouldNotExistsKsiazkaById() {
+    void shouldNotKsiazkaExistsById() {
         when(ksiazkaRepository.existsById(any()))
                 .thenReturn(false);
 
-        boolean existsKsiazkaById = ksiegService.ksiazkaExistsById(1);
+        boolean ksiazkaExistsById = ksiegService.ksiazkaExistsById(1);
 
-        assertThat(existsKsiazkaById).isFalse();
+        assertThat(ksiazkaExistsById).isFalse();
     }
 
     @Test
     void shouldDeleteKsiazkaById() {
 //        doNothing().when(ksiazkaRepository).deleteById(any());
-        // Mock, który nic nie robi; może być stosowany tylko na metodach zwracających void
 
-        ksiegService.deleteKsiazkaById(1);
+        ksiegService.ksiazkaDeleteById(1);
 
         verify(ksiazkaRepository/*, times(2)*/).deleteById(any());
-        // Verify prosi o Mocka i dokonuje weryfikacji - ale tylko jeden raz; w przypadku odkomentowania times(2)
-        // weryfikacja zostanie wykonana dwukrotnie (ale wtedy też ksiazkaRepository.deletebyId() w samym serwisie
-        // musiałoby się wykonywać dwukrotnie;
 
+    }
+
+    @Test
+    void shouldGetTlumacze() {
+        List<Tlumacz> tlumacze = List.of(new Tlumacz(), new Tlumacz(), new Tlumacz());
+
+        when(tlumaczRepository.findAll())
+                .thenReturn(tlumacze);
+
+        List<Tlumacz> wszyscyTlumacze = ksiegService.getTlumacze();
+
+        assertThat(wszyscyTlumacze).isNotEmpty();
     }
 
 }

@@ -58,12 +58,12 @@ public class KsiegRestController {
         return ksiegService.updateKsiazka();
     }
 
-    @GetMapping("/ksiazka/greater")
+    @GetMapping("/ksiazki/greater")
     public ResponseEntity<List<Ksiazka>> getAllByIdIsGreaterThan() {
         return ResponseEntity.ok(ksiegService.getAllByIdIsGreaterThan());
     }
 
-    @GetMapping("/ksiazka/greatername")
+    @GetMapping("/ksiazki/greatername")
     public ResponseEntity<List<Ksiazka>> getAllByIdIsGreaterThanAndTytulIsContaining() {
         return ResponseEntity.ok(ksiegService.getAllByIdIsGreaterThanAndTytulIsContaining());
     }
@@ -75,7 +75,7 @@ public class KsiegRestController {
 
     @GetMapping("/ksiazka/usun/{id}")
     public void deleteKsiazkaById(@PathVariable Integer id) {
-        ksiegService.deleteKsiazkaById(id);
+        ksiegService.ksiazkaDeleteById(id);
     }
 
     //      < - - Autorzy - - >
@@ -85,7 +85,7 @@ public class KsiegRestController {
         return ResponseEntity.ok(ksiegService.getAutorById(id));
     }
 
-    @GetMapping("/autor/nazwisko/{nazwisko}")        // Wyszukiwanie jest „case sensitivity”
+    @GetMapping("/autor/nazwisko/{nazwisko}")        // Wyszukiwanie jest „case sensitive”
     public ResponseEntity<Autor> getAutorByNazwisko(@PathVariable String nazwisko) {
         return ResponseEntity.ok(ksiegService.getAutorByNazwisko(nazwisko));
     }
@@ -103,7 +103,7 @@ public class KsiegRestController {
 
     //      < - - Wydania - - >
 
-    @GetMapping("/wydanie/id/{id}")
+    @GetMapping("/wydanie/{id}")
     public ResponseEntity<Wydanie> getWydanieById(@PathVariable Integer id) {
         return ResponseEntity.ok(ksiegService.getWydanieById(id));
     }
@@ -125,7 +125,7 @@ public class KsiegRestController {
 
     //      < - - Tłumacze - - >
 
-    @GetMapping("/tlumacz/id/{id}")
+    @GetMapping("/tlumacz/{id}")
     public ResponseEntity<Tlumacz> getTlumaczById(@PathVariable Integer id) {
         return ResponseEntity.ok(ksiegService.getTlumaczById(id));
     }
