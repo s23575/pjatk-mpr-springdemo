@@ -1,8 +1,6 @@
 package pl.edu.pjatk.mpr.springdemo.Services;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -48,10 +46,10 @@ class KsiegServiceTestIT {
         // GIVEN
         Ksiazka ksiazka = new Ksiazka(null, "Imperium chmur", null, List.of(), List.of());
         // WHEN
-        ksiegService.dopiszTytuloryg(ksiazka);
+        ksiegService.dopiszTytulOryg(ksiazka);
         // THEN
         // Assertions.assertThat() - ale to stare rozwiązanie, bardziej wskazane jest poniższe:
-        assertThat(ksiazka.getTytuloryg()).isEqualTo("Brak / nie dotyczy");
+        assertThat(ksiazka.getTytulOryg()).isEqualTo("Brak / nie dotyczy");
     }
 
     @Test
@@ -60,9 +58,9 @@ class KsiegServiceTestIT {
         Ksiazka ksiazka = new Ksiazka(null, "Zbrodnia i kara", "Priestuplenije i nakazanije", List.of(),
                 List.of());
         // WHEN
-        ksiegService.dopiszTytuloryg(ksiazka);
+        ksiegService.dopiszTytulOryg(ksiazka);
         // THEN
-        assertThat(ksiazka.getTytuloryg()).isNotEqualTo("Brak / nie dotyczy");
+        assertThat(ksiazka.getTytulOryg()).isNotEqualTo("Brak / nie dotyczy");
     }
 
     @Test
@@ -82,7 +80,7 @@ class KsiegServiceTestIT {
         // WHEN
         ksiegService.usmiercAutora(autor);
         // THEN
-        assertThat(autor.getDatasm()).isEqualTo(2022);
+        assertThat(autor.getDataSm()).isEqualTo(2022);
     }
 
     @Test
@@ -92,7 +90,7 @@ class KsiegServiceTestIT {
         // WHEN
         ksiegService.usmiercAutora(autor);
         // THEN
-        assertThat(autor.getDatasm()).isNotEqualTo(2022);
+        assertThat(autor.getDataSm()).isNotEqualTo(2022);
     }
 
     @Test
@@ -105,7 +103,7 @@ class KsiegServiceTestIT {
         // WHEN
         ksiegService.dodajWydanie(ksiazka, wydanie);
         // THEN
-        assertThat(ksiazka.getWydanie().size()).isGreaterThan(0);
+        assertThat(ksiazka.getWydania().size()).isGreaterThan(0);
     }
 
     @Test
@@ -116,7 +114,7 @@ class KsiegServiceTestIT {
         // WHEN
         ksiegService.zmienDostepnosc(wydanie);
         // THEN
-        assertThat(wydanie.getCzydostepne()).isFalse();
+        assertThat(wydanie.getCzyDostepne()).isFalse();
     }
 
     @Test
@@ -127,7 +125,7 @@ class KsiegServiceTestIT {
         // WHEN
         ksiegService.zmienDostepnosc(wydanie);
         // THEN
-        assertThat(wydanie.getCzydostepne()).isTrue();
+        assertThat(wydanie.getCzyDostepne()).isTrue();
     }
 
     @Test
@@ -161,7 +159,7 @@ class KsiegServiceTestIT {
         // WHEN
         ksiegService.usunTlumaczy(wydanie);
         // THEN
-        assertThat(wydanie.getTlumacz()).isNull();
+        assertThat(wydanie.getTlumacze()).isNull();
     }
 
     @Test
@@ -242,7 +240,7 @@ class KsiegServiceTestIT {
         when(ksiazkaRepository.findAll())
                 .thenReturn(ksiazki);
 
-        List<Ksiazka> wszystkKsiazk = ksiegService.getWszystkKsiazk();
+        List<Ksiazka> wszystkKsiazk = ksiegService.getKsiazki();
 
         assertThat(wszystkKsiazk).hasSize(ksiazki.size());
 //        assertThat(wszystkKsiazk).isNotEmpty();
@@ -253,7 +251,7 @@ class KsiegServiceTestIT {
         when(ksiazkaRepository.findAll())
                 .thenReturn(List.of());
 
-        List<Ksiazka> wszystkKsiazk = ksiegService.getWszystkKsiazk();
+        List<Ksiazka> wszystkKsiazk = ksiegService.getKsiazki();
 
         assertThat(wszystkKsiazk).isEmpty();
     }
@@ -265,7 +263,7 @@ class KsiegServiceTestIT {
         when(wydanieRepository.findAll())
                 .thenReturn(wydania);
 
-        List<Wydanie> wszystkWyd = ksiegService.getWszystkWyd();
+        List<Wydanie> wszystkWyd = ksiegService.getWydania();
 
         assertThat(wszystkWyd).isNotEmpty();
     }
@@ -275,7 +273,7 @@ class KsiegServiceTestIT {
         when(wydanieRepository.findAll())
                 .thenReturn(List.of());
 
-        List<Wydanie> wszystkWyd = ksiegService.getWszystkWyd();
+        List<Wydanie> wszystkWyd = ksiegService.getWydania();
 
         assertThat(wszystkWyd).isEmpty();
     }
@@ -285,7 +283,7 @@ class KsiegServiceTestIT {
         when(ksiazkaRepository.existsById(any()))
                 .thenReturn(true);
 
-        boolean existsKsiazkaById = ksiegService.existsKsiazkaById(1);
+        boolean existsKsiazkaById = ksiegService.ksiazkaExistsById(1);
 
         assertThat(existsKsiazkaById).isTrue();
     }
@@ -295,7 +293,7 @@ class KsiegServiceTestIT {
         when(ksiazkaRepository.existsById(any()))
                 .thenReturn(false);
 
-        boolean existsKsiazkaById = ksiegService.existsKsiazkaById(1);
+        boolean existsKsiazkaById = ksiegService.ksiazkaExistsById(1);
 
         assertThat(existsKsiazkaById).isFalse();
     }

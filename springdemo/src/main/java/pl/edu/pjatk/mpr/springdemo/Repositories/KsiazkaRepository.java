@@ -8,19 +8,24 @@ import pl.edu.pjatk.mpr.springdemo.Models.Ksiazka;
 import javax.transaction.Transactional;
 import java.util.List;
 
-public interface KsiazkaRepository extends JpaRepository<Ksiazka, Integer> {
-    // KsiazkaRepository, bo ten interfejs obsługuje obiekty Ksiazka - pierwszy typ generyczny, drugi - ID obiektu
+// * „KsiazkaRepository”, bo to interfejs obsługujący książki (obiekty typu „Ksiazka”); pierwszy typ generyczny
+//   (Ksiazka), drugi – typ ID obiektu.
+
+// ** Dopisanie metody do aktualizacji danych – nie ma takiej „domyślnej” w „JpaRepository”; „int” na początku, aby
+//    metoda zwracała liczbę zmienionych wierszy.
+
+// *** Takie formułowanie metod przy pomocy Springa / JpaRepository wykorzstuje się do trzech argumentów – powyżej te
+//     liczby zapytanie robi się nieczytelne (=/= zapytanie SQL-owe).
+
+public interface KsiazkaRepository extends JpaRepository<Ksiazka, Integer> {        // *
 
     @Transactional
     @Modifying
     @Query("UPDATE Ksiazka k SET k.tytul = :tytul where k.id = :id")
-    int updateKsiazka(String tytul, Integer id);
-    // Dopisanie własnej metody do aktualizacji danych - bo nie ma takiej "domyślnej"
-    // Int na początku dlatego, żeby zwracał liczbę poprawionych wierszy
+    int updateKsiazka(String tytul, Integer id);        // **
 
-    List<Ksiazka> findAllByIdIsGreaterThan(Integer id);
+    List<Ksiazka> findAllByIdIsGreaterThan(Integer id);     // ***
 
-    // To się raczej wykorzystuje do trzech argumentów, powyżej robi się nieczytelne
     List<Ksiazka> findAllByIdIsGreaterThanAndTytulIsContaining(Integer id, String tytul);
 
 }

@@ -1,5 +1,6 @@
 package pl.edu.pjatk.mpr.springdemo.Services;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import pl.edu.pjatk.mpr.springdemo.Models.*;
 import pl.edu.pjatk.mpr.springdemo.Repositories.AutorRepository;
@@ -10,14 +11,22 @@ import pl.edu.pjatk.mpr.springdemo.Repositories.WydanieRepository;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+// * Wstrzynięcie można zrobić przez „Autowired” – jak w przypadku kontrolera i serwisu
+
+// ** „findById” domyślnie zwraca typ „Optional<T>”; to widać w (kliknięcie + CTRL) „KsiazkaRepository” ->
+//    „JpaRepository” -> „PagingAndSortingRepository” -> „CrudRepository”
+
+// *** „byId.” oferuje wiele różnych opcji, co w sytuacji, gdy szukana wartość nie zostanie znaleziona – gdy zwrócony
+//     zostanie inny obiekt („zwróć mi obiekt taki, a jak go nie ma, to...”); „RuntimeException” zwraca w aplikacji
+//     błąd o statusie 500 („Internal Server Error”).
+
+@Service        // Po dodaniu tej adnotacji, klasa jest odpowiednio „widziana” przez Springa („używana”)
 public class KsiegService {
 
     private final KsiazkaRepository ksiazkaRepository;
     private final WydanieRepository wydanieRepository;
     private final AutorRepository autorRepository;
-    private final TlumaczRepository tlumaczRepository;
-    // Wstrzynięcie można zrobić przez "Autowired", analogicznie, jak w przypadku serwisów i kontrolera
+    private final TlumaczRepository tlumaczRepository;      // *
 
     public KsiegService(KsiazkaRepository ksiazkaRepository, WydanieRepository wydanieRepository, AutorRepository
             autorRepository, TlumaczRepository tlumaczRepository) {
@@ -25,32 +34,40 @@ public class KsiegService {
         this.wydanieRepository = wydanieRepository;
         this.autorRepository = autorRepository;
         this.tlumaczRepository = tlumaczRepository;
+    }       // Wstrzyknięcie repozytoriów w serwisie =/= wstrzyknięcie serwisu w kontrolerze
+
+    //      < - - Ksiazki - - >
+
+    public Ksiazka getKsiazkaById(Integer id) {
+        Optional<Ksiazka> byId = ksiazkaRepository.findById(id);        // **
+        return byId.orElse(null);       // ***
+//        return byId.orElseThrow(RuntimeException::new);
+//        return byId.orElseThrow(() -> new RuntimeException("Obsługiwany błąd"));
     }
-    // Wstrzyknięcie w serwisie, żeby to rozgraniczyć - nie w kontrolerze; z tego można teraz korzystać w metodach
 
-    //<-- Ksiazki -->
+    public List<Ksiazka> getKsiazki() {
+        return ksiazkaRepository.findAll();
+    }
 
-    public Ksiazka getPrzykKsiazk() {
-        Wydanie wyd1 = new Wydanie(null, 2015, 1, "978-83-777-9221-6", Oprawa.TWARDA, 49.9,
-                "Znak", true, null);
-        Wydanie wyd2 = new Wydanie(null, 2019, null, "978-83-280-6779-0", Oprawa.MIEKKA, 24.99,
-                "Wilga", true, null);
-        List<Wydanie> wydanie = List.of(wyd1, wyd2);
-//        List<Wydanie> wydanie = getWszystkWyd();
-//        List<Wydanie> wydanie = getWszystkPrzykWyd();
-        List<Autor> autor = List.of(new Autor(null, "Fiodor", "Dostojewski", 1821, 1881,
+    public Ksiazka addKsiazka() {
+        List<Tlumacz> tlumacz = List.of(new Tlumacz(null, "Jolanta", "Kozak", null));
+        List<Wydanie> wydanie = List.of(new Wydanie(null, 2022, 2, "978-83-08-07475-6", Oprawa.TWARDA,
+                44.9, "Wydawnictwo Literackie", true, tlumacz));
+        List<Autor> autor = List.of(new Autor(null, "Philip", "Roth", 1933, 2018,
                 null));
-        Ksiazka ksiazka = new Ksiazka(null, "Zbrodnia i kara", "Priestuplenije i nakazanije", wydanie,
+        Ksiazka ksiazka = new Ksiazka(null, "Konające zwierzę", "The Dying Animal", wydanie,
                 autor);
         return ksiazkaRepository.save(ksiazka);
     }
 
-    public List<Ksiazka> getWszystkKsiazk() {
-        return ksiazkaRepository.findAll();
+    public Ksiazka addKsiazkaDoWydan() {
+        Ksiazka ksiazka = new Ksiazka(null, "Opowieści galicyjskie", null, getTwoTopWydania(),
+                List.of(getAutorByNazwisko("Stasiuk")));
+        return ksiazkaRepository.save(ksiazka);
     }
 
     public int updateKsiazka() {
-        return ksiazkaRepository.updateKsiazka("Nowy przykladowy tytul", 15);
+        return ksiazkaRepository.updateKsiazka("Jądro ciemności", 6);
     }
 
     public List<Ksiazka> getAllByIdIsGreaterThan() {
@@ -61,20 +78,7 @@ public class KsiegService {
         return ksiazkaRepository.findAllByIdIsGreaterThanAndTytulIsContaining(5, "Kr");
     }
 
-    public Ksiazka getKsiazkaById(Integer id) {
-        Optional<Ksiazka> byId = ksiazkaRepository.findById(id);
-        // findById domyślnie zwraca typ Optional<T>; to widać w KsiazkaRepository -> JpaRepository ->
-        // PagingAndSortingRepository -> CrudRepository
-
-//        return byId.orElseThrow(RuntimeException::new);
-//        return byId.orElseThrow(() -> new RuntimeException("Obsługiwany błąd"));
-        return byId.orElse(null);
-        // Po "byId." jest wiele różnych opcji, co można zrobić w sytuacji, gdy szukana wartość nie zostanie znaleziona
-        // - gdy zwrócony obiekt będzie inny ("zwróć mi obiekt taki, a jak go nie ma, to...")
-        // RuntimeException zwraca error 500: Internal Server Error
-    }
-
-    public boolean existsKsiazkaById(Integer id) {
+    public boolean ksiazkaExistsById(Integer id) {
         return ksiazkaRepository.existsById(id);
     }
 
@@ -82,55 +86,67 @@ public class KsiegService {
         ksiazkaRepository.deleteById(id);
     }
 
+    //      < - - Autorzy - - >
 
-    //<-- Autorzy -->
-
-    public Autor getPrzykAutor() {
-        return new Autor(1, "Fiodor", "Dostojewski", 1821, 1881, null);
-    }
-
-    public Autor getPrzykAutorArugm(String imie, String nazwisko, Integer dataur) {
-        return new Autor(1, imie, nazwisko, dataur, null, null);
-    }
-
-    public Autor getPrzykAutorParam(String imie, String nazwisko, Integer dataur, Integer datasm) {
-        Autor autor = new Autor(null, imie, nazwisko, dataur, datasm, null);
-        return autorRepository.save(autor);
+    public Autor getAutorById(Integer id) {
+        Optional<Autor> byId = autorRepository.findById(id);
+        return byId.orElseThrow(() -> new RuntimeException("Obsługiwany błąd"));
     }
 
     public Autor getAutorByNazwisko(String nazwisko) {
         Optional<Autor> byNazwisko = autorRepository.findByNazwisko(nazwisko);
-//        return byNazwisko.orElseThrow(RuntimeException::new);
         return byNazwisko.orElseThrow(() -> new RuntimeException("Obsługiwany błąd"));
-//        return byNazwisko.orElse(new Autor(null,null,nazwisko,null,null,null));
     }
 
-    //<-- Wydania -->
-
-    public Wydanie getPrzykWyd() {
-        Wydanie wydanie = new Wydanie(null, 2015, 1, "978-83-777-9221-6", Oprawa.TWARDA, 49.9,
-                "Znak", true, null);
-        return wydanieRepository.save(wydanie);
+    public Autor addAutorParametry(String imie, String nazwisko, Integer dataUr, Integer dataSm) {
+        Autor autor = new Autor(null, imie, nazwisko, dataUr, dataSm, null);
+        return autorRepository.save(autor);
     }
 
-    public List<Wydanie> getWszystkPrzykWyd() {
-        Wydanie wyd1 = new Wydanie(null, 2015, 1, "978-83-777-9221-6", Oprawa.TWARDA, 49.9,
-                "Znak", true, null);
-        Wydanie wyd2 = new Wydanie(null, 2019, null, "978-83-280-6779-0", Oprawa.MIEKKA, 24.99,
-                "Wilga", true, null);
+    public List<Autor> getAutorzy() {
+        return autorRepository.findAll();
+    }
+
+    //      < - - Wydania - - >
+
+    public Wydanie getWydanieById(Integer id) {
+        Optional<Wydanie> byId = wydanieRepository.findById(id);
+        return byId.orElseThrow(() -> new RuntimeException("Obsługiwany błąd"));
+    }
+
+    public List<Wydanie> addWydania() {
+        Wydanie wyd1 = new Wydanie(null, 2016, 4, "978-83-804-9367-4", Oprawa.TWARDA, 34.90,
+                "Czarne", true, null);
+        Wydanie wyd2 = new Wydanie(null, 2011, 7, "978-83-7536-265-7", Oprawa.MIEKKA, 29.50,
+                "Czarne", false, null);
         List<Wydanie> wydania = List.of(wyd1, wyd2);
         return wydanieRepository.saveAll(wydania);
     }
 
-    public List<Wydanie> getWszystkWyd() {
+    public List<Wydanie> getTwoTopWydania() {
+        return wydanieRepository.findTopElements(PageRequest.of(0, 2));
+    }
+
+    public List<Wydanie> getWydania() {
         return wydanieRepository.findAll();
     }
 
-    // <-- Metody do testów -->
+    //      < - - Tlumacze - - >
 
-    public void dopiszTytuloryg(Ksiazka ksiazka) {
-        if (ksiazka.getTytuloryg() == null) {
-            ksiazka.setTytuloryg("Brak / nie dotyczy");
+    public Tlumacz getTlumaczById(Integer id) {
+        Optional<Tlumacz> byId = tlumaczRepository.findById(id);
+        return byId.orElseThrow(() -> new RuntimeException("Obsługiwany błąd"));
+    }
+
+    public List<Tlumacz> getTlumacze() {
+        return tlumaczRepository.findAll();
+    }
+
+    //      < - - Metody do testów - - >
+
+    public void dopiszTytulOryg(Ksiazka ksiazka) {
+        if (ksiazka.getTytulOryg() == null) {
+            ksiazka.setTytulOryg("Brak / nie dotyczy");
         }
     }
 
@@ -141,25 +157,20 @@ public class KsiegService {
     }
 
     public void usmiercAutora(Autor autor) {
-        if (autor.getDatasm() == null) {
-            autor.setDatasm(2022);
+        if (autor.getDataSm() == null) {
+            autor.setDataSm(2022);
         }
     }
 
     public void dodajWydanie(Ksiazka ksiazka, Wydanie wydanie) {
-        if (ksiazka.getWydanie().size() == 0) {
+        if (ksiazka.getWydania().size() == 0) {
             List<Wydanie> wydania = List.of(wydanie);
-            ksiazka.setWydanie(wydania);
+            ksiazka.setWydania(wydania);
         }
     }
 
     public void zmienDostepnosc(Wydanie wydanie) {
-//        if (wydanie.getCzydostepne()) {
-//            wydanie.setCzydostepne(false);
-//        } else {
-//            wydanie.setCzydostepne(true);
-//        }
-        wydanie.setCzydostepne(!wydanie.getCzydostepne());
+        wydanie.setCzyDostepne(!wydanie.getCzyDostepne());
     }
 
     public void zmienOprawe(Wydanie wydanie) {
@@ -171,8 +182,8 @@ public class KsiegService {
     }
 
     public void usunTlumaczy(Wydanie wydanie) {
-        if (wydanie.getTlumacz().size() > 0) {
-            wydanie.setTlumacz(null);
+        if (wydanie.getTlumacze().size() > 0) {
+            wydanie.setTlumacze(null);
         }
     }
 

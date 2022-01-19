@@ -1,114 +1,137 @@
 package pl.edu.pjatk.mpr.springdemo.Controllers;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import pl.edu.pjatk.mpr.springdemo.Models.Autor;
 import pl.edu.pjatk.mpr.springdemo.Models.Ksiazka;
+import pl.edu.pjatk.mpr.springdemo.Models.Tlumacz;
 import pl.edu.pjatk.mpr.springdemo.Models.Wydanie;
 import pl.edu.pjatk.mpr.springdemo.Services.KsiegService;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/ksieg")
+// * Spring zapewnia obsługę odpowiednio zonaczonych klas – gwarantuje dodatkowe zachowania
+
+// ** Bez „final” i bez konstruktora wystąpi błąd („NullPointerException” i status 500); przy final, ale bez
+//    konstruktora, aplikacja nie zbuduje się, bo obiekt nie zostanie zainicjalizowany: „java: variable ksiegService not
+//    initialized in the default constructor”; to jest przykład zależności: RestController nie może istnieć bez serwisu
+
+@RestController     // „Kubeł” obsługujący zapytania *
+@RequestMapping("/ksieg")       // Adres, na który będą wysyłane zapytania
 
 public class KsiegRestController {
 
 //    @Autowired
-//    KsiegService ksiegService;
-    // To też zadziała, ale to nie jest najlepsze rozwiązanie
+//    KsiegService ksiegService;        // Wstrzyknięcie zależności - ale to nie jest najlepsze rozwiązanie
 
-    private final KsiegService ksiegService;
-    // Bez final i bez konstruktora poniżej to będzie zwracać error (NullPointerException i status 500);
-    // Przy final, ale bez konstruktora, aplikacja w ogóle się nie zbuduje - bo obiekt nie został zainicjalizowany:
-    // "java: variable ksiegService not initialized in the default constructor"
-    // To też pokazuje przykład zależności - RestController nie może istnieć bez serwisu
+    private final KsiegService ksiegService;        // Wstrzyknięcie zależności *
 
     public KsiegRestController(KsiegService ksiegService) {
         this.ksiegService = ksiegService;
     }
 
-    //<-- Ksiazka -->
+    //      < - - Książki - - >
 
-    @GetMapping("/przykksiazk")
-    public ResponseEntity<Ksiazka> getPrzykKsiazk() {
-        return ResponseEntity.ok(ksiegService.getPrzykKsiazk());
+    @GetMapping("/ksiazka/{id}")
+    public ResponseEntity<Ksiazka> getKsiazkaById(@PathVariable Integer id) {
+        return ResponseEntity.ok(ksiegService.getKsiazkaById(id));
     }
 
     @GetMapping("/ksiazki")
-    public ResponseEntity<List<Ksiazka>> getWszystkKsiazk() {
-        return ResponseEntity.ok(ksiegService.getWszystkKsiazk());
+    public ResponseEntity<List<Ksiazka>> getKsiazki() {
+        return ResponseEntity.ok(ksiegService.getKsiazki());
     }
 
-    @GetMapping("/zmientytul")
+    @GetMapping("/ksiazka/dodaj")
+    public ResponseEntity<Ksiazka> addKsiazka() {
+        return ResponseEntity.ok(ksiegService.addKsiazka());
+    }
+
+    @GetMapping("/ksiazka/dodajdowydan")
+    public ResponseEntity<Ksiazka> addKsiazkaDoWydan() {
+        return ResponseEntity.ok(ksiegService.addKsiazkaDoWydan());
+    }
+
+    @GetMapping("/ksiazka/zmien")
     public int updateKsiazka() {
         return ksiegService.updateKsiazka();
     }
 
-    @GetMapping("/greater")
+    @GetMapping("/ksiazka/greater")
     public ResponseEntity<List<Ksiazka>> getAllByIdIsGreaterThan() {
         return ResponseEntity.ok(ksiegService.getAllByIdIsGreaterThan());
     }
 
-    @GetMapping("/greatername")
+    @GetMapping("/ksiazka/greatername")
     public ResponseEntity<List<Ksiazka>> getAllByIdIsGreaterThanAndTytulIsContaining() {
         return ResponseEntity.ok(ksiegService.getAllByIdIsGreaterThanAndTytulIsContaining());
     }
 
-    @GetMapping("/exists/{id}")
-    public boolean existsKsiazkaById(@PathVariable Integer id) {
-        return ksiegService.existsKsiazkaById(id);
+    @GetMapping("/ksiazka/istnieje/{id}")
+    public boolean ksiazkaExistsById(@PathVariable Integer id) {
+        return ksiegService.ksiazkaExistsById(id);
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/ksiazka/usun/{id}")
     public void deleteKsiazkaById(@PathVariable Integer id) {
         ksiegService.deleteKsiazkaById(id);
     }
 
-    //<-- Autor -->
+    //      < - - Autorzy - - >
 
-    @GetMapping("/przykaut")
-    public ResponseEntity<Autor> getPrzykAut() {
-        return ResponseEntity.ok(ksiegService.getPrzykAutor());
+    @GetMapping("/autor/id/{id}")
+    public ResponseEntity<Autor> getAutorByNazwisko(@PathVariable Integer id) {
+        return ResponseEntity.ok(ksiegService.getAutorById(id));
     }
 
-    @GetMapping("/przykautoiminazw")
-    public ResponseEntity<Autor> getPrzykAutoArgum() {
-        return ResponseEntity.ok(ksiegService.getPrzykAutorArugm("Jacek", "Dukaj", 1974));
-    }
-
-    @GetMapping("/przykautoimienazwparam")
-    public ResponseEntity<Autor> getPrzykAutoParam(@RequestParam String imie, String nazwisko, Integer dataur, Integer
-            datasm) {
-        // http://localhost:8080/ksieg/przykautoimienazwparam?imie=jan&nazwisko=kowalski
-        return ResponseEntity.ok(ksiegService.getPrzykAutorParam(imie, nazwisko, dataur, datasm));
-    }
-
-    @GetMapping("/autor/{nazwisko}")
+    @GetMapping("/autor/nazwisko/{nazwisko}")        // Wyszukiwanie jest „case sensitivity”
     public ResponseEntity<Autor> getAutorByNazwisko(@PathVariable String nazwisko) {
         return ResponseEntity.ok(ksiegService.getAutorByNazwisko(nazwisko));
     }
 
-    //<-- Wydanie -->
+    @GetMapping("/autor/dodaj")
+    public ResponseEntity<Autor> addAutorParametry(@RequestParam String imie, String nazwisko, Integer dataUr, Integer
+            dataSm) {
+        return ResponseEntity.ok(ksiegService.addAutorParametry(imie, nazwisko, dataUr, dataSm));
+    }       // http://localhost:8080/ksieg/autor/dodaj?imie=Charles&nazwisko=Bukowski&dataUr=1920&dataSm=1994
 
-    @GetMapping("/przykwyd")
-    public ResponseEntity<Wydanie> getPrzykWyd() {
-        return ResponseEntity.ok(ksiegService.getPrzykWyd());
+    @GetMapping("/autorzy")
+    public ResponseEntity<List<Autor>> getAutorzy() {
+        return ResponseEntity.ok(ksiegService.getAutorzy());
     }
 
-    @GetMapping("/przykwydania")
-    public ResponseEntity<List<Wydanie>> getWszystkPrzykWyd() {
-//        ksiegService.getPrzykWyd();
-        return ResponseEntity.ok(ksiegService.getWszystkPrzykWyd());
+    //      < - - Wydania - - >
+
+    @GetMapping("/wydanie/id/{id}")
+    public ResponseEntity<Wydanie> getWydanieById(@PathVariable Integer id) {
+        return ResponseEntity.ok(ksiegService.getWydanieById(id));
+    }
+
+    @GetMapping("/wydania/dodaj")
+    public ResponseEntity<List<Wydanie>> addWydania() {
+        return ResponseEntity.ok(ksiegService.addWydania());
     }
 
     @GetMapping("/wydania")
-    public ResponseEntity<List<Wydanie>> getWszystkWyd() {
-        return ResponseEntity.ok(ksiegService.getWszystkWyd());
+    public ResponseEntity<List<Wydanie>> getWydania() {
+        return ResponseEntity.ok(ksiegService.getWydania());
     }
 
+    @GetMapping("/wydania/top")
+    public ResponseEntity<List<Wydanie>> getTwoTopWydania() {
+        return ResponseEntity.ok(ksiegService.getTwoTopWydania());
+    }
+
+    //      < - - Tłumacze - - >
+
+    @GetMapping("/tlumacz/id/{id}")
+    public ResponseEntity<Tlumacz> getTlumaczById(@PathVariable Integer id) {
+        return ResponseEntity.ok(ksiegService.getTlumaczById(id));
+    }
+
+    @GetMapping("/tlumacze")
+    public ResponseEntity<List<Tlumacz>> getTlumacze() {
+        return ResponseEntity.ok(ksiegService.getTlumacze());
+    }
 }

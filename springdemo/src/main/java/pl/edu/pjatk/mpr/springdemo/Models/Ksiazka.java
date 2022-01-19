@@ -5,49 +5,50 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import javax.persistence.*;
 import java.util.List;
 
+// * GenerationType.Identity – pole ma własną strategię (własną numerację); bez określenia strategii, numeracja
+//   jest automatyczna – kontynouowana dla wszystkich obiektów (np. książek i wydań).
+
+// ** CascadeType.All wskazuje, jakie operacje są dozwolone na liście; dzięki temu, dodając do bazy przykładową
+//    książkę, można od razu dodać wydanie (listę wydań); nie wyskakuje błąd „object references an unsaved transient
+//    instance - save the transient instance before flushing”
+
 @Entity
 public class Ksiazka {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // Do tego potrzebny jest bezargumentowy konstruktor
-    // Identity sprawia, że dane pole ma swoją własną strategię (nie ma wspólnej numeracji dla np. książek i wydań)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)     // To wymaga bezargumentowego konstruktora *
     private Integer id;
     private String tytul;
-    private String tytuloryg;
+    @Column(name = "tytul_oryg")
+    private String tytulOryg;
     @OneToMany(cascade = CascadeType.ALL)
-    // To służy "powiedzeniu", jakie operacje są dozwolone na liście, przez to nie wyskakuje błąd
-    // "object references an unsaved transient instance - save the transient instance before flushing"
-    // Dzięki temu przez stworzenie (dodanie do bazy) przykładowej książki można od razu dodać listę wydań
     @JoinTable(
             name = "k_w",
             joinColumns = @JoinColumn(name = "ksiazka_id"),
             inverseJoinColumns = @JoinColumn(name = "wydanie_id"))
-    private List<Wydanie> wydanie;
-    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Wydanie> wydania;
+    @ManyToMany(cascade = CascadeType.ALL)      // **
     @JoinTable(
             name = "k_a",
             joinColumns = @JoinColumn(name = "ksiazka_id"),
             inverseJoinColumns = @JoinColumn(name = "autor_id"))
-    @JsonManagedReference
-    // Ta adnotacja jest potrzebna, żeby w JSONie książka nie rozwijała się bez końca (zapętlenie)
+    @JsonManagedReference       // Adnotacja potrzebna, aby w JSON-ie nie dochodziło do zapętlenia
     private List<Autor> autorzy;
 
-    public Ksiazka(Integer id, String tytul, String tytuloryg, List<Wydanie> wydanie, List<Autor> autorzy) {
+    public Ksiazka(Integer id, String tytul, String tytulOryg, List<Wydanie> wydania, List<Autor> autorzy) {
         this.id = id;
         this.tytul = tytul;
-        this.tytuloryg = tytuloryg;
-        this.wydanie = wydanie;
+        this.tytulOryg = tytulOryg;
+        this.wydania = wydania;
         this.autorzy = autorzy;
     }
 
     public Ksiazka() {
     }
 
-    // Bez getterów i setterów dane nie będą wyświetlane w aplikacji / JSONie
     public Integer getId() {
         return id;
-    }
+    }       // Bez getterów i setterów dane nie będą wyświetlane w JSON-ie
+
 
     public void setId(Integer id) {
         this.id = id;
@@ -61,21 +62,20 @@ public class Ksiazka {
         this.tytul = tytul;
     }
 
-    public String getTytuloryg() {
-        return tytuloryg;
+    public String getTytulOryg() {
+        return tytulOryg;
     }
 
-    public void setTytuloryg(String tytuloryg) {
-        this.tytuloryg = tytuloryg;
+    public void setTytulOryg(String tytulOryg) {
+        this.tytulOryg = tytulOryg;
     }
 
-
-    public List<Wydanie> getWydanie() {
-        return wydanie;
+    public List<Wydanie> getWydania() {
+        return wydania;
     }
 
-    public void setWydanie(List<Wydanie> wydanie) {
-        this.wydanie = wydanie;
+    public void setWydania(List<Wydanie> wydania) {
+        this.wydania = wydania;
     }
 
     public List<Autor> getAutorzy() {
@@ -91,8 +91,8 @@ public class Ksiazka {
         return "Ksiazka{" +
                 "id=" + id +
                 ", tytul='" + tytul + '\'' +
-                ", tytuloryg='" + tytuloryg + '\'' +
-                ", wydanie=" + wydanie +
+                ", tytuloryg='" + tytulOryg + '\'' +
+                ", wydania=" + wydania +
                 ", autorzy=" + autorzy +
                 '}';
     }
