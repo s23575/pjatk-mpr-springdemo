@@ -40,8 +40,8 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<!-- Po każdym dodaniu zależności należy kliknąć przycisk / ikonkę "Load Maven Changes" -->
-		<!-- Potwierdzenie, że baza się uruchamia: log: -->
+		<!-- Po każdym dodaniu zależności należy „przeładować” – kliknąć ikonkę „Load Maven Changes” -->
+		<!-- Potwierdzenie, że baza się uruchamia: -->
 		<!--		2022-01-16 00:03:59.554  INFO 10260 -&#45;&#45; [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...-->
 		<!--		2022-01-16 00:03:59.813  INFO 10260 -&#45;&#45; [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.-->
 
@@ -54,12 +54,14 @@
 	</dependencies>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 </project>
