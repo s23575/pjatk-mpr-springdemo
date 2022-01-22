@@ -11,14 +11,31 @@ import pl.edu.pjatk.mpr.springdemo.Services.KsiegService;
 
 import java.util.List;
 
-// * Spring zapewnia obsługę odpowiednio zonaczonych klas – gwarantuje dodatkowe zachowania
+// MVC – Model, View, Controller; ale „View” nie musi występować, może zostać zastąpione przez warstwę serwisów
+// („Serivce”): kontroler zwraca się do serwisu, serwis zwraca się do bazy danych i zwraca uzyskany model do
+// kontrolera, który zwraca to do użytkownika.
+
+// Dane zwracane w formie pliku JSON – uniwersalny; połączenie z bazą danych i generowanie (zwracanie – serializacja)
+// tych danych w takim formacie może odbywać się przy pomocy różnych języków.
+
+// Singleton – klasa, w której może istnieć jedna instancja; takim singletonem jest RestController – to tworzy
+//             Spiring: RestController, do którego potrzebny jest Service, który też jest tworzony (też singleton).
+
+//             Wstrzykiwanie zależności (dependency injections) – to „zabawa” singletonami, żeby nie tworzyć np.
+//             kilku KsiegService; tworzy się klasę i „wstrzykuje się” zależności.
+
+// * Spring zapewnia obsługę odpowiednio zonaczonych klas – gwarantuje dodatkowe zachowania.
 
 // ** Bez „final” i bez konstruktora wystąpi błąd („NullPointerException” i status 500); przy final, ale bez
 //    konstruktora, aplikacja nie zbuduje się, bo obiekt nie zostanie zainicjalizowany: „java: variable ksiegService not
-//    initialized in the default constructor”; to jest przykład zależności: RestController nie może istnieć bez serwisu
+//    initialized in the default constructor”; to jest przykład zależności: RestController nie może istnieć bez serwisu.
+
+// *** Każda metoda składa się z: a) nazwy (np. getKsiazkaById), b) identyfikatora dostępu (np. /ksiazka/{id}),
+//     c) typu zwracanych danych (np. ResponseEntity<Ksiazka>; ResponseEntity pozwala zarządzać wszystkimi statusami
+//     (obsługiwać kody / błędy, np. 200 – sukces, prawidłowo zwrócono dane, 404 – błąd, nie znaleziono danych).
 
 @RestController     // „Kubeł” obsługujący zapytania *
-@RequestMapping("/ksieg")       // Adres, na który będą wysyłane zapytania
+@RequestMapping("/ksieg")       // Adres, na który będą wysyłane zapytania (tu np. localhost:8080/ksieg/...)
 
 public class KsiegRestController {
 
@@ -33,7 +50,7 @@ public class KsiegRestController {
 
     //      < - - Książki - - >
 
-    @GetMapping("/ksiazka/{id}")
+    @GetMapping("/ksiazka/{id}")        // „Endpoint” – ciąg adresowy pozwalający na kontakt z aplikacją („bramka”) ***
     public ResponseEntity<Ksiazka> getKsiazkaById(@PathVariable Integer id) {
         return ResponseEntity.ok(ksiegService.getKsiazkaById(id));
     }

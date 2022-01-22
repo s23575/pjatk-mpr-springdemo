@@ -45,6 +45,10 @@
 		<!--		2022-01-16 00:03:59.554  INFO 10260 -&#45;&#45; [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...-->
 		<!--		2022-01-16 00:03:59.813  INFO 10260 -&#45;&#45; [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.-->
 
+		<!-- H2 Database – pamięciowa baza danych, przechowuje dane w trakcie działania aplikacji (przy jej
+		wyłączeniu dane, co do zasady, przepadają; ale jej stosowanie jest bardzo proste:
+		https://www.baeldung.com/spring-boot-h2-database -->
+
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>

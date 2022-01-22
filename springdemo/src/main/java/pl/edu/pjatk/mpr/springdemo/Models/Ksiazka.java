@@ -23,8 +23,8 @@ public class Ksiazka {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "k_w",
-            joinColumns = @JoinColumn(name = "ksiazka_id"),
-            inverseJoinColumns = @JoinColumn(name = "wydanie_id"))
+            joinColumns = @JoinColumn(name = "ksiazka_id")/*,
+            inverseJoinColumns = @JoinColumn(name = "wydanie_id")*/)
     private List<Wydanie> wydania;
     @ManyToMany(cascade = CascadeType.ALL)      // **
     @JoinTable(
