@@ -4,9 +4,12 @@ package pl.edu.pjatk.mpr.springdemo.Services;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+// Mockito – biblioteka umożliwiająca tworzenie atrap obiektu; aby jej użyć, konieczne może być dodanie jej w pom.xml.
+
 import pl.edu.pjatk.mpr.springdemo.Models.*;
 import pl.edu.pjatk.mpr.springdemo.Repositories.AutorRepository;
 import pl.edu.pjatk.mpr.springdemo.Repositories.KsiazkaRepository;
@@ -21,6 +24,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
+// Na testy poświęca się prawie tyle samo czasu (ok. 40%), co na przygotowanie aplikacji. Ale one muszą być –
+// zwłaszcza w przypadku dużych projektów (zapewniają stabilność aplikacji, zapobiegają stratom (finansowym)).
+
+// Trzy grupy testów:
+// 1) jednostkowe (z lub bez mockowania) – one są bardzo szybkie, a wykorzystanie aplikacji / bazy danych spowodowałoby,
+//    że stałyby się one niewydajne;
+// 2) integracyjne (z lub bez mockowania) – przetestowanie, czy Endpointy zwracają prawidlowe rzeczy – tu można
+//    zamockować bazę danych;
+// 3) end-to-end (integracyjne z bazą danych) – np. z zapytaniem SQL, nie można ich zamockować.
+
+// Mockowanie – „udawanie” zachowania repozytorium / klasy; „manekiny”, „marionetki”, „atrapy”. Mockuje się serwisy
+//              zewnętrzne – dostęp do nich może kosztować, a szkoda marnować to na testy. Zamockować można wszystko,
+//              co jest obiektem – nie można jedynie mockować obiektów (klas) statycznych (to robi PowerMockito).
+//
+//              Mockowanie bazy danych – bo np. sztuczna baza danych, umieszczona w sieci, może nie być dostępna.
+//              Korzystanie z bazy danych może być też niewydajne, bo zwiększałby się czas ich wykonywania lub
+//              kosztowałoby to dodatkowo.
 
 // * Repozytoria to interfejsy – nie mogą być „new” („new KsiegService(new ksiazkaRepository, ...”), zawsze muszą być
 //   implementowane; na potrzeby testów tworzy się czasami „sztuczne” repozytoria – w początkowych testach
@@ -39,12 +60,12 @@ import static org.mockito.Mockito.*;
 //       wykonana dwukrotnie (wtedy też sprawdzana metoda w samym serwisie musiałoby się wykonywać dwukrotnie.
 
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(MockitoExtension.class)     // Rozszerzenie pewnych funkcjonalności testów o funkcjonalności z Mockito
 class KsiegServiceTest {
 
     //      < - - Inicjalizacja testowanego serwisu - - >
 
-    @Mock
+    @Mock       // Utworzenie obiektów (repozytoriów) z adnotacją Mock – zamockowanie ich
     private KsiazkaRepository ksiazkaRepository;
     @Mock
     private WydanieRepository wydanieRepository;
@@ -53,18 +74,18 @@ class KsiegServiceTest {
     @Mock
     private TlumaczRepository tlumaczRepository;
 
-    @InjectMocks
+    @InjectMocks        // Wstrzyknięcie mocka w serwisie
     private KsiegService ksiegService;      // = new KsiegService(null, null, null, null); *
 
     //      < - - Testy jednostkowe - - >
 
     @Test       // Metody wywołujące testy - sprawdzającą asercję
     void shouldDopiszTytulOryg1() {
-        // GIVEN **
+        // GIVEN        – dane wejściowe, służące do wywoływania testów; **
         Ksiazka ksiazka = new Ksiazka(null, "Czarne Oceany", null, List.of(), List.of());
-        // WHEN
+        // WHEN         – sekcja, w której wywołuje się test bądź przypisuje się rezultat do zmiennej;
         ksiegService.dopiszTytulOryg(ksiazka);
-        // THEN
+        // THEN         – miejsce, w którym robi się asercję – wywołuje metodę sprawdzającą warunek / poprawność danych
         assertThat(ksiazka.getTytulOryg()).isEqualTo("Brak / nie dotyczy");
 //      Assertions.assertThat(ksiazka.getTytulOryg()).isEqualTo("Brak / nie dotyczy"); //       Stare rozwiązanie
 

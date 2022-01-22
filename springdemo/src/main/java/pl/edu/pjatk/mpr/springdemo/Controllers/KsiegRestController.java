@@ -98,7 +98,7 @@ public class KsiegRestController {
     //      < - - Autorzy - - >
 
     @GetMapping("/autor/id/{id}")
-    public ResponseEntity<Autor> getAutorByNazwisko(@PathVariable Integer id) {
+    public ResponseEntity<Autor> getAutorByNazwisko(@PathVariable Integer id) {     // Sposób przekazywania argumentów
         return ResponseEntity.ok(ksiegService.getAutorById(id));
     }
 
@@ -109,7 +109,7 @@ public class KsiegRestController {
 
     @GetMapping("/autor/dodaj")
     public ResponseEntity<Autor> addAutorParametry(@RequestParam String imie, String nazwisko, Integer dataUr, Integer
-            dataSm) {
+            dataSm) {       // Drugi sposób przekazywania argumentów
         return ResponseEntity.ok(ksiegService.addAutorParametry(imie, nazwisko, dataUr, dataSm));
     }       // http://localhost:8080/ksieg/autor/dodaj?imie=Charles&nazwisko=Bukowski&dataUr=1920&dataSm=1994
 

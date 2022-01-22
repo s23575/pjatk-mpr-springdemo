@@ -21,6 +21,24 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+// Testy integracyjne – nie testowanie modułów (bo w tym wypadku ich nie ma), ale bardziej testy aplikacji – jej
+// kontekstu, czy beany się ładują, czy serwisy odpowiednio się komunikują; test ładujący kontekst aplikacji,
+// wykonujący test i kończący pracę aplikacji.
+
+// Kompilacja – błąd gdy np. brakuje odpowiedniego importu (błąd składni); budowanie – gdy aplikacja się kompiluje (kod
+// składniowo jest dobry), ale coś nie działą.
+//
+// Przykładem błędu, który spowoduje kompilację, ale brak zbudowania aplikacji: usunięcie adnotacji „Service”
+// spowoduje błąd „unsatisfied depenedency” - Rest Controller wymaga serwisu, ale ze względu na usunięcie adnotacji o
+// nim, istniejący serwis nie będzie  zarządzany przez Springa (nie będzie mógł dokonać „dependency injection”).
+//
+// Inny taki błąd: zapętlenie zależności – dodanie do konstruktora serwisu samego serwisu lub dodanie kontrolera do
+// wstrzykiwanych zależności w serwisie.
+
+// Kontroler – otrzymuje zapytanie / polecenie z konkretnej ścieżki i wykonuje operację; następnie on otrzymuje dane
+// i serializuje je – w rezultacie użytkownik otrzymuje JSON-a; serializacja danych jest bardzo podatna na błędny –
+// testy jednostkowe i integracyjne tego wykryją tego, więc potrzebne są integracyjne związane z endpointami.
+
 // * Wskazany pakiet nie jest z pakietu Mockito, ale ze Springa; stąd też nie ma „@ExtendWith(MockitoExtension.class)”.
 
 @SpringBootTest

@@ -19,6 +19,9 @@ import java.util.Optional;
 // *** „byId.” oferuje wiele różnych opcji, co w sytuacji, gdy szukana wartość nie zostanie znaleziona – gdy zwrócony
 //     zostanie inny obiekt („zwróć mi obiekt taki, a jak go nie ma, to...”); „RuntimeException” zwraca w aplikacji
 //     błąd o statusie 500 („Internal Server Error”).
+//
+//     Optional – typ generyczny („generyk”), wymaga podania typu. Obiekt może być pusty, może też być „null”; byId
+//     domyślnie (przez repozytorium / interfejs) zwraca optional.
 
 @Service        // Po dodaniu tej adnotacji, klasa jest odpowiednio „widziana” przez Springa („używana”)
 public class KsiegService {

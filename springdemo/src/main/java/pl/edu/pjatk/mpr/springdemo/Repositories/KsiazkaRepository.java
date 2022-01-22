@@ -8,6 +8,10 @@ import pl.edu.pjatk.mpr.springdemo.Models.Ksiazka;
 import javax.transaction.Transactional;
 import java.util.List;
 
+// Repozytorium – pozwala na zarządzanie danymi (bazą danych); interfejs rozszerzający interfejs Springowy: CRUD /
+//                JPA Repository (to zastąpiło JDBC); CRUD - create, read, update, delete – pozwala na modyfikacje
+//                danych; interfejs pomiędzy aplikacją a bazą danych.
+
 // * „KsiazkaRepository”, bo to interfejs obsługujący książki (obiekty typu „Ksiazka”); pierwszy typ generyczny
 //   (Ksiazka), drugi – typ ID obiektu.
 
