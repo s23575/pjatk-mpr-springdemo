@@ -12,7 +12,7 @@ import java.util.List;
 //    książkę, można od razu dodać wydanie (listę wydań); nie wyskakuje błąd „object references an unsaved transient
 //    instance - save the transient instance before flushing”
 
-@Entity
+@Entity     // Wskazanie, że „Książka” jest encją (w bazie danych), co skutkuje utworzeniem odpowiednich tabel
 public class Ksiazka {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)     // To wymaga bezargumentowego konstruktora *

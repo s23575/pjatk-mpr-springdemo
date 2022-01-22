@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 //   natychmiast), czy załączają się wszystkie elementy („Beany”); najważniejsza część testu integracyjnego to
 //   załadowanie kontekstu – to decyduje, że coś jest testem integracyjnym.
 
-@SpringBootTest
+@SpringBootTest		// Powoduje załadowanie kontekstu
 class SpringdemoApplicationTests {		// *
 
 	@Test

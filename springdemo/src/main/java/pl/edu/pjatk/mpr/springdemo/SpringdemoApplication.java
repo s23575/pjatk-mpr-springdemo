@@ -11,7 +11,7 @@ import pl.edu.pjatk.mpr.springdemo.Models.Autor;
 // 				   z nią – to jest kilkanaście-kilkadziesiąt klas; to jest dostarczane przez SpringData).
 
 // 				   Do istnienia jednej klasy potrzebna jest druga – potrzebne są zależności, wykorzystywane w aplikacji
-//             	   (przez tworzone w niej klasy); np. np. KsiegController potrzebny jest KsiegService – wywołujemy w
+//             	   (przez tworzone w niej klasy); np. KsiegController potrzebny jest KsiegService – wywołujemy w
 //             	   kontrolerze metody z serwisu, a jeżeli tej zależności nie ma (nie została „wstrzyknięta)”, to
 //             	   kontroler nie działa (na tym polega zależność).
 
@@ -20,12 +20,12 @@ import pl.edu.pjatk.mpr.springdemo.Models.Autor;
 // 				   SpringWeb, SpringData, SpringCloud, SpringWebServices.
 
 // Adnotacje	 – dodatkowe zachowania „schowane” pod oznaczonymi w określony sposób klasami (np. klasa oznaczona
-// 				   jako „Service” albo „Entity”.
+// 				   jako „Service” albo „Entity”).
 
 // Biblioteka vs. framework – „inversion of control”, kto kontroluje „flow” (programista vs. framework):
 // https://www.freecodecamp.org/news/the-difference-between-a-framework-and-a-library-bd133054023f/
 
-@SpringBootApplication
+@SpringBootApplication		// Aplikacja Springowa
 public class SpringdemoApplication {
 
 	public static void main(String[] args) {

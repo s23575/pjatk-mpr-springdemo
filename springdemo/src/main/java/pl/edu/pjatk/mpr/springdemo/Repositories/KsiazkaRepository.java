@@ -24,7 +24,7 @@ import java.util.List;
 public interface KsiazkaRepository extends JpaRepository<Ksiazka, Integer> {        // *
 
     @Transactional
-    @Modifying
+    @Modifying      // Ta i powyższa adnotacja są konieczne w przypadku metod modyfikujących
     @Query("UPDATE Ksiazka k SET k.tytul = :tytul where k.id = :id")
     int updateKsiazka(String tytul, Integer id);        // **
 

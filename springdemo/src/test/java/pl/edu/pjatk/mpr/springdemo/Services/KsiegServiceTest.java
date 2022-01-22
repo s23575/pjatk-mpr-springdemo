@@ -74,12 +74,12 @@ class KsiegServiceTest {
     @Mock
     private TlumaczRepository tlumaczRepository;
 
-    @InjectMocks        // Wstrzyknięcie mocka w serwisie
+    @InjectMocks        // Wstrzyknięcie mocków w serwisie
     private KsiegService ksiegService;      // = new KsiegService(null, null, null, null); *
 
     //      < - - Testy jednostkowe - - >
 
-    @Test       // Metody wywołujące testy - sprawdzającą asercję
+    @Test       // Metody wywołujące testy – sprawdzającą asercję
     void shouldDopiszTytulOryg1() {
         // GIVEN        – dane wejściowe, służące do wywoływania testów; **
         Ksiazka ksiazka = new Ksiazka(null, "Czarne Oceany", null, List.of(), List.of());

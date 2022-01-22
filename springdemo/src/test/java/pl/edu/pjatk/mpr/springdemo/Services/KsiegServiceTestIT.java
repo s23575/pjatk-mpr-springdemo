@@ -41,7 +41,7 @@ import static org.mockito.Mockito.when;
 
 // * Wskazany pakiet nie jest z pakietu Mockito, ale ze Springa; stąd też nie ma „@ExtendWith(MockitoExtension.class)”.
 
-@SpringBootTest
+@SpringBootTest     // Powoduje załadowanie kontekstu
 class KsiegServiceTestIT {
 
     //      < - - Inicjalizacja testowanego serwisu - - >
@@ -49,7 +49,7 @@ class KsiegServiceTestIT {
     @Autowired
     private KsiegService ksiegService;
 
-    @MockBean
+    @MockBean       // „Udający” obiekt zastępuje obiekt w aplikacji (w kontekście aplikacji)
     private KsiazkaRepository ksiazkaRepository;
     @MockBean
     private WydanieRepository wydanieRepository;
@@ -62,7 +62,7 @@ class KsiegServiceTestIT {
 
     @Test       // Metody wywołujące testy - sprawdzającą asercję
     void shouldDopiszTytulOryg1() {
-        // GIVEN **
+        // GIVEN
         Ksiazka ksiazka = new Ksiazka(null, "Czarne Oceany", null, List.of(), List.of());
         // WHEN
         ksiegService.dopiszTytulOryg(ksiazka);

@@ -12,11 +12,11 @@ import pl.edu.pjatk.mpr.springdemo.Services.KsiegService;
 import java.util.List;
 
 // MVC – Model, View, Controller; ale „View” nie musi występować, może zostać zastąpione przez warstwę serwisów
-// („Serivce”): kontroler zwraca się do serwisu, serwis zwraca się do bazy danych i zwraca uzyskany model do
+// („Service”): kontroler zwraca się do serwisu, serwis zwraca się do bazy danych i zwraca uzyskany model do
 // kontrolera, który zwraca to do użytkownika.
 
 // Dane zwracane w formie pliku JSON – uniwersalny; połączenie z bazą danych i generowanie (zwracanie – serializacja)
-// tych danych w takim formacie może odbywać się przy pomocy różnych języków.
+// danych w takim formacie może odbywać się przy pomocy różnych języków.
 
 // Singleton – klasa, w której może istnieć jedna instancja; takim singletonem jest RestController – to tworzy
 //             Spiring: RestController, do którego potrzebny jest Service, który też jest tworzony (też singleton).
@@ -105,7 +105,7 @@ public class KsiegRestController {
     @GetMapping("/autor/nazwisko/{nazwisko}")        // Wyszukiwanie jest „case sensitive”
     public ResponseEntity<Autor> getAutorByNazwisko(@PathVariable String nazwisko) {
         return ResponseEntity.ok(ksiegService.getAutorByNazwisko(nazwisko));
-    }
+    } // http://localhost:8080/ksieg/autor/nazwisko/Conrad
 
     @GetMapping("/autor/dodaj")
     public ResponseEntity<Autor> addAutorParametry(@RequestParam String imie, String nazwisko, Integer dataUr, Integer

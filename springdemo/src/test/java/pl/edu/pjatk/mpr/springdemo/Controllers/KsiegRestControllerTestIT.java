@@ -15,13 +15,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-public class KsiegRestControllerTestIT {
+@SpringBootTest     // Powoduje załadowanie kontekstu
+@AutoConfigureMockMvc       // Automatyczna konfiguracja MockMvc
+public class KsiegRestControllerTestIT {        // Sprawdzenie Endpointów
 
     @Autowired
-
-    private MockMvc mockMvc;
+    private MockMvc mockMvc;        // Obiekt mockujący zachowanie użytkownika, korzystającego z aplikacji przez API
 
     //      < - - Ksiazki - - >
 
