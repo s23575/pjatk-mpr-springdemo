@@ -1,6 +1,6 @@
-package pl.edu.pjatk.mpr.springdemo;
+// https://github.com/s23575/pjatk-mpr-springdemo
 
-//
+package pl.edu.pjatk.mpr.springdemo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
