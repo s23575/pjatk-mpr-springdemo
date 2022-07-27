@@ -9,7 +9,15 @@ import pl.edu.pjatk.mpr.springdemo.Models.Tlumacz;
 import pl.edu.pjatk.mpr.springdemo.Models.Wydanie;
 import pl.edu.pjatk.mpr.springdemo.Services.KsiegService;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
+
+import org.json.JSONObject;
+import org.json.JSONException;
 
 // MVC – Model, View, Controller; ale „View” nie musi występować, może zostać zastąpione przez warstwę serwisów
 // („Service”): kontroler zwraca się do serwisu, serwis zwraca się do bazy danych i zwraca uzyskany model do
@@ -46,6 +54,16 @@ public class KsiegRestController {
 
     public KsiegRestController(KsiegService ksiegService) {
         this.ksiegService = ksiegService;
+    }
+
+    @GetMapping("/test")
+    public void test() throws JSONException, IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://eureka.mf.gov.pl/api/public/v1/informacje/13064")).build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        JSONObject myObject = new JSONObject(response.body());
+        System.out.println(myObject); // Your json object
     }
 
     //      < - - Książki - - >
